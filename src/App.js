@@ -7,6 +7,7 @@ import './App.css';
 import Client from '../node_modules/another-rest-client';
 
 const username = 'Name', passw = 'Name'
+
 class App extends Component {
   constructor(props) {
     super()
@@ -14,6 +15,8 @@ class App extends Component {
     this.onClickClean = this.onClickClean.bind(this)
     this.onClickSimplest = this.onClickSimplest.bind(this)
     this.onClickReqPost=this.onClickReqPost.bind(this)
+   
+    this.state={log:'log'}
   }
   render() {
     return (
@@ -31,6 +34,7 @@ class App extends Component {
           <Button bsStyle='success' onClick={this.onClickReqPost} >XMLHttpRequest onClickReqPost создание справочника</Button>
           
         </ButtonGroup>
+        <h2>{this.state.log}</h2>
       </div>
     );
   }
@@ -38,8 +42,7 @@ class App extends Component {
   onClick() {
 
     console.log('We are work!')
-    //const api = new RestClient('https://api.github.com');
-    var args = {
+     var args = {
       data: { test: "hello" },
       headers: { 'Authorization': 'Basic ' + Buffer.from(username + ':' + passw).toString('base64') }
     };
@@ -57,8 +60,9 @@ class App extends Component {
     x.open("POST", "http://localhost/SC/odata/standard.odata/Catalog_sampleref?$format=json", true);
     x.withCredentials = true;
     
-    x.onload = function () {
+    x.onload = ()=> {
       console.log(x.responseText);
+      this.setState({log:x.responseText})
     }
     x.send(JSON.stringify({"Description":"Test"}));
   }
@@ -70,17 +74,19 @@ class App extends Component {
     x.open("GET", "http://localhost/SC/odata/standard.odata", true);
     x.withCredentials = true;
     
-    x.onload = function () {
+    x.onload = ()=> {
       console.log(x.responseText);
+      this.setState({log:x.responseText})
     }
     x.send(null);
   }
-//http://localhost/SC/odata/standard.odata/Catalog_sampleref?$format=json
+
   onClickSimplest() {
+    
     let x = new XMLHttpRequest();
     x.open("GET", "http://localhost/", true);
-    x.onload = function () {
-      alert(x.responseText);
+    x.onload = ()=> {
+       this.setState({log:x.responseText})
     }
     x.send(null);
   }
