@@ -60,7 +60,7 @@ class App extends Component {
     x.onload = function () {
       console.log(x.responseText);
     }
-    x.send(JSON.stringify({}));
+    x.send(JSON.stringify({"Description":"Test"}));
   }
 
   onClickClean() {
