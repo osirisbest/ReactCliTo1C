@@ -7,6 +7,7 @@ import './App.css';
 import Client from '../node_modules/another-rest-client';
 
 const username = 'Name', passw = 'Name'
+const x = new XMLHttpRequest();
 
 class App extends Component {
   constructor(props) {
@@ -14,25 +15,23 @@ class App extends Component {
     this.onClick = this.onClick.bind(this)
     this.onClickClean = this.onClickClean.bind(this)
     this.onClickSimplest = this.onClickSimplest.bind(this)
-    this.onClickReqPost=this.onClickReqPost.bind(this)
-   
-    this.state={log:'log'}
+    this.onClickReqPost = this.onClickReqPost.bind(this)
+
+    this.state = { log: 'log' }
   }
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-
         </header>
         <p className="App-intro">
         </p>
         <ButtonGroup vertical>
-          <Button bsStyle='primary' onClick={this.onClick} >Тестовый запрос выполнить</Button>
-          <Button bsStyle='success' onClick={this.onClickClean} >XMLHttpRequest запрос с авторизацией</Button>
-          <Button bsStyle='success' onClick={this.onClickSimplest} >XMLHttpRequest Простейший рабочий запрос к локалхосту</Button>
+          <Button bsStyle='primary' onClick={this.onClick} >Тестовый onClick запрос выполнить</Button>
+          <Button bsStyle='success' onClick={this.onClickClean} >XMLHttpRequest onClickClean запрос с авторизацией</Button>
+          <Button bsStyle='success' onClick={this.onClickSimplest} >XMLHttpRequest onClickSimplest Простейший рабочий запрос к локалхосту</Button>
           <Button bsStyle='success' onClick={this.onClickReqPost} >XMLHttpRequest onClickReqPost создание справочника</Button>
-          
         </ButtonGroup>
         <h2>{this.state.log}</h2>
       </div>
@@ -40,9 +39,8 @@ class App extends Component {
   }
 
   onClick() {
-
     console.log('We are work!')
-     var args = {
+    var args = {
       data: { test: "hello" },
       headers: { 'Authorization': 'Basic ' + Buffer.from(username + ':' + passw).toString('base64') }
     };
@@ -54,39 +52,30 @@ class App extends Component {
   }
 
   onClickReqPost() {
-
-    let x = new XMLHttpRequest();
-
     x.open("POST", "http://localhost/SC/odata/standard.odata/Catalog_sampleref?$format=json", true);
     x.withCredentials = true;
-    
-    x.onload = ()=> {
+    x.onload = () => {
       console.log(x.responseText);
-      this.setState({log:x.responseText})
+      this.setState({ log: x.responseText })
     }
-    x.send(JSON.stringify({"Description":"Test"}));
+    x.send(JSON.stringify({ "Description": "Test" }));
   }
 
   onClickClean() {
-
     let x = new XMLHttpRequest();
-
     x.open("GET", "http://localhost/SC/odata/standard.odata", true);
     x.withCredentials = true;
-    
-    x.onload = ()=> {
-      console.log(x.responseText);
-      this.setState({log:x.responseText})
+    x.onload = () => {
+      this.setState({ log: x.responseText })
     }
     x.send(null);
   }
 
   onClickSimplest() {
-    
-    let x = new XMLHttpRequest();
+    const x = new XMLHttpRequest();
     x.open("GET", "http://localhost/", true);
-    x.onload = ()=> {
-       this.setState({log:x.responseText})
+    x.onload = () => {
+      this.setState({ log: x.responseText })
     }
     x.send(null);
   }
