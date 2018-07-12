@@ -6,7 +6,7 @@ import logo from './omnic.png';
 import './App.css';
 import Client from '../node_modules/another-rest-client';
 
-const username = 'Name', passw = 'Name'
+//const username = 'Name', passw = 'Name'
 //const x = new XMLHttpRequest();
 
 class App extends Component {
@@ -49,10 +49,9 @@ class App extends Component {
     console.log('We are work!')
     var args = {
       data: { test: "hello" },
-      headers: { 'Authorization': 'Basic ' + Buffer.from(username + ':' + passw).toString('base64') }
     };
     const client = new Client()
-    client.get('http://localhost/SC/odata/standard.odata', args, function (data, response) {
+    client.get('http://localhost/cc/odata/standard.odata', args, function (data, response) {
       console.log(data)
       console.log(response)
     })
@@ -60,8 +59,7 @@ class App extends Component {
  
   onClickClean() {
     let x = new XMLHttpRequest();
-    x.open("GET", "http://localhost/SC/odata/standard.odata", true);
-    x.setRequestHeader('Access-Control-Allow-Origin','http://localhost:3000')
+    x.open("GET", "http://localhost/sc/odata/standard.odata", true);
     x.withCredentials = true;
     x.onload = () => {
       this.setState({ log: x.responseText })
@@ -87,9 +85,8 @@ class App extends Component {
   onClickReqPost() {
     let x = new XMLHttpRequest();
     x.withCredentials = true;
-    x.open("POST", "http://localhost/SC/odata/standard.odata/Catalog_sampleref?$format=json", true);
-    //x.setRequestHeader('Access-Control-Allow-Origin','http://localhost:3000')
-    
+    x.open("POST", "http://localhost/sc/odata/standard.odata/Catalog_sampleref?$format=json", true);
+       
     x.onload = () => {
       console.log(x.responseText);
       this.setState({ log: x.responseText })
@@ -106,30 +103,22 @@ class App extends Component {
   onClickCreateDocumentRequest() {
     let x = new XMLHttpRequest();
     x.withCredentials = true;
-    x.open("POST", "http://localhost/SC/odata/standard.odata/Document_СЦентр_Обращение?$format=json", true);
-    
-    //x.mozBackgroundRequest = true;
-    
-   // x.setRequestHeader('Content-type','application/json');
-    //x.setRequestHeader('Access-Control-Allow-Origin','http://localhost:3000')
-    //x.setRequestHeader('Authorization','Basic TmFtZTpOYW1l')
-    //x.setRequestHeader('Authorization', 'Basic ' + Buffer.from(username + ':' + passw).toString('base64'))
+    x.open("POST", "http://localhost/sc/odata/standard.odata/Document_СЦентр_Обращение?$format=json", true);
     
     x.onload = () => {
-      console.log(x.status)
-      console.log(x.statusText)
-      console.log(x.responseText);
+      console.log('status:'+x.status)
+      console.log('statusText:'+x.statusText)
+      console.log('responseText:'+x.responseText);
       this.setState({ log: x.responseText })
     }
     x.onerror = () => {
-      console.log(x.status)
-      console.log(x.statusText)
-      console.log(x.responseText);
+      console.log('status:'+x.status)
+      console.log('statusText:'+x.statusText)
+      console.log('responseText:'+x.responseText);
       this.setState({ log: x.status })
     }
     x.send(JSON.stringify({"ОписаниеНеисправности": "Тестовое описание. Все поломалось,все плохо_","Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"}));
   }
 }
-
 
 export default App;
