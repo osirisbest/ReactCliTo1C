@@ -16,7 +16,6 @@ class App extends Component {
     this.onClickClean = this.onClickClean.bind(this)
     this.onClickSimplest = this.onClickSimplest.bind(this)
     this.onClickReqPost = this.onClickReqPost.bind(this)
-
     this.state = { log: 'log' }
   }
   render() {
