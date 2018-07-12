@@ -46,8 +46,7 @@ class App extends Component {
   }
 
   onClick() {
-    console.log('We are work!')
-    var args = {
+   var args = {
       data: { test: "hello" },
     };
     const client = new Client()
@@ -117,7 +116,7 @@ class App extends Component {
       console.log('responseText:'+x.responseText);
       this.setState({ log: x.status })
     }
-    x.send(JSON.stringify({"ОписаниеНеисправности": "Тестовое описание. Все поломалось,все плохо_","Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"}));
+    x.send(JSON.stringify({"ОписаниеНеисправности": "Тестовое описание. Все поломалось,все плохо_*","Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"}));
   }
 }
 
