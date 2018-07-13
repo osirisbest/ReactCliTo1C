@@ -4,42 +4,35 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import logo from './omnic.png';
 import './App.css';
-import Client from '../node_modules/another-rest-client';
+//import Client from '../node_modules/another-rest-client';
 
-//const username = 'Name', passw = 'Name'
-//const x = new XMLHttpRequest();
+const addr='http://192.168.200.139'
 
 class App extends Component {
   constructor(props) {
     super()
-    this.onClick = this.onClick.bind(this)
-    this.onClickClean = this.onClickClean.bind(this)
-    this.onClickSimplest = this.onClickSimplest.bind(this)
-    this.onClickReqPost = this.onClickReqPost.bind(this)
     this.onClickCreateDocumentRequest = this.onClickCreateDocumentRequest.bind(this)
     this.onChangeError=this.onChangeError.bind(this)
+    this.onChangeComment=this.onChangeComment.bind(this)
     this.state = { log: 'log' }
   }
   render() {
     return (
-      <div className="App">
+        <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>
         <p className="App-intro">
         </p>
+        <h1>Опишите свою проблему и нажмите клавишу 'Создать обращение' для отправки в сервисный центр</h1>
         <form className="commentForm">
-          
-          <textarea type="text" placeholder="Say something..." onChange={this.onChangeError}/>
-          
+          <textarea type="text" placeholder="Комментарий" cols="78" rows="5" onChange={this.onChangeComment}/>
+        </form>
+        <form>  
+          <textarea type="text" placeholder="Опишите проблему" cols="78" rows="5" onChange={this.onChangeError}/>      
         </form>
         <ButtonGroup vertical>
-          <Button bsStyle='primary' onClick={this.onClick} >Тестовый onClick запрос выполнить</Button>
-          <Button bsStyle='success' onClick={this.onClickClean} >XMLHttpRequest onClickClean запрос с авторизацией</Button>
-          <Button bsStyle='success' onClick={this.onClickSimplest} >XMLHttpRequest onClickSimplest Простейший рабочий запрос к локалхосту</Button>
-          <Button bsStyle='success' onClick={this.onClickReqPost} >XMLHttpRequest onClickReqPost создание справочника</Button>
-          <Button bsStyle='success' onClick={this.onClickCreateDocumentRequest} >XMLHttpRequest onClickCreateDocumentRequest создание документа</Button>
-
+           <Button bsStyle='success' onClick={this.onClickCreateDocumentRequest} >Создать обращение</Button>
         </ButtonGroup>
         <h2>{this.state.log}</h2>
       </div>
@@ -50,64 +43,15 @@ class App extends Component {
     this.setState({error: event.target.value})
   }
 
-  onClick() {
-    var args = {
-      data: { test: "hello" },
-    };
-    const client = new Client()
-    client.get('http://localhost/cc/odata/standard.odata', args, function (data, response) {
-      console.log(data)
-      console.log(response)
-    })
-  }
-
-  onClickClean() {
-    let x = new XMLHttpRequest();
-    x.open("GET", "http://localhost/sc/odata/standard.odata", true);
-    x.withCredentials = true;
-    x.onload = () => {
-      this.setState({ log: x.responseText })
-    }
-    x.send(null);
-  }
-
-  onClickSimplest() {
-    let x = new XMLHttpRequest();
-    x.open("GET", "http://localhost/", true);
-    x.onload = () => {
-      this.setState({ log: x.responseText })
-    }
-    x.onerror = () => {
-      console.log(x.status)
-      console.log(x.statusText)
-      console.log(x.responseText);
-      this.setState({ log: x.responseText })
-    }
-    x.send(null);
-  }
-
-  onClickReqPost() {
-    let x = new XMLHttpRequest();
-    x.withCredentials = true;
-    x.open("POST", "http://localhost/sc/odata/standard.odata/Catalog_sampleref?$format=json", true);
-
-    x.onload = () => {
-      console.log(x.responseText);
-      this.setState({ log: x.responseText })
-    }
-    x.onerror = () => {
-      console.log(x.status)
-      console.log(x.statusText)
-      console.log(x.responseText);
-      this.setState({ log: x.responseText })
-    }
-    x.send(JSON.stringify({ "Description": "Test" }));
+  onChangeComment(event){
+    this.setState({error: event.target.comment})
   }
 
   onClickCreateDocumentRequest() {
     let x = new XMLHttpRequest();
     x.withCredentials = true;
-    x.open("POST", "http://localhost/sc/odata/standard.odata/Document_СЦентр_Обращение?$format=json", true);
+    
+    x.open("POST", addr+'/sc/odata/standard.odata/Document_СЦентр_Обращение?$format=json', true);
 
     x.onload = () => {
       console.log('status:' + x.status)
@@ -121,8 +65,8 @@ class App extends Component {
       console.log('responseText:' + x.responseText);
       this.setState({ log: x.status })
     }
-    //let test="Тестовое описание. Все поломалось,все плохо_+_*"
-    x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39" }));
+    
+    x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39","Комментарий":this.state.comment}));
   }
 }
 
