@@ -16,7 +16,8 @@ class App extends Component {
     this.onClickClean = this.onClickClean.bind(this)
     this.onClickSimplest = this.onClickSimplest.bind(this)
     this.onClickReqPost = this.onClickReqPost.bind(this)
-    this.onClickCreateDocumentRequest=this.onClickCreateDocumentRequest.bind(this)
+    this.onClickCreateDocumentRequest = this.onClickCreateDocumentRequest.bind(this)
+    this.onChangeError=this.onChangeError.bind(this)
     this.state = { log: 'log' }
   }
   render() {
@@ -27,26 +28,30 @@ class App extends Component {
         </header>
         <p className="App-intro">
         </p>
-        <ButtonGroup vertical>
         <form className="commentForm">
-        <input type="text" placeholder="Your name" />
-        <input type="text" placeholder="Say something..." />
-        <input type="submit" value="Post" />      
-      </form>
+          
+          <textarea type="text" placeholder="Say something..." onChange={this.onChangeError}/>
+          
+        </form>
+        <ButtonGroup vertical>
           <Button bsStyle='primary' onClick={this.onClick} >Тестовый onClick запрос выполнить</Button>
           <Button bsStyle='success' onClick={this.onClickClean} >XMLHttpRequest onClickClean запрос с авторизацией</Button>
           <Button bsStyle='success' onClick={this.onClickSimplest} >XMLHttpRequest onClickSimplest Простейший рабочий запрос к локалхосту</Button>
           <Button bsStyle='success' onClick={this.onClickReqPost} >XMLHttpRequest onClickReqPost создание справочника</Button>
           <Button bsStyle='success' onClick={this.onClickCreateDocumentRequest} >XMLHttpRequest onClickCreateDocumentRequest создание документа</Button>
-          
+
         </ButtonGroup>
         <h2>{this.state.log}</h2>
       </div>
     );
   }
 
+  onChangeError(event){
+    this.setState({error: event.target.value})
+  }
+
   onClick() {
-   var args = {
+    var args = {
       data: { test: "hello" },
     };
     const client = new Client()
@@ -55,7 +60,7 @@ class App extends Component {
       console.log(response)
     })
   }
- 
+
   onClickClean() {
     let x = new XMLHttpRequest();
     x.open("GET", "http://localhost/sc/odata/standard.odata", true);
@@ -85,7 +90,7 @@ class App extends Component {
     let x = new XMLHttpRequest();
     x.withCredentials = true;
     x.open("POST", "http://localhost/sc/odata/standard.odata/Catalog_sampleref?$format=json", true);
-       
+
     x.onload = () => {
       console.log(x.responseText);
       this.setState({ log: x.responseText })
@@ -103,20 +108,21 @@ class App extends Component {
     let x = new XMLHttpRequest();
     x.withCredentials = true;
     x.open("POST", "http://localhost/sc/odata/standard.odata/Document_СЦентр_Обращение?$format=json", true);
-    
+
     x.onload = () => {
-      console.log('status:'+x.status)
-      console.log('statusText:'+x.statusText)
-      console.log('responseText:'+x.responseText);
+      console.log('status:' + x.status)
+      console.log('statusText:' + x.statusText)
+      console.log('responseText:' + x.responseText);
       this.setState({ log: x.responseText })
     }
     x.onerror = () => {
-      console.log('status:'+x.status)
-      console.log('statusText:'+x.statusText)
-      console.log('responseText:'+x.responseText);
+      console.log('status:' + x.status)
+      console.log('statusText:' + x.statusText)
+      console.log('responseText:' + x.responseText);
       this.setState({ log: x.status })
     }
-    x.send(JSON.stringify({"ОписаниеНеисправности": "Тестовое описание. Все поломалось,все плохо_*","Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"}));
+    //let test="Тестовое описание. Все поломалось,все плохо_+_*"
+    x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key": "4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39" }));
   }
 }
 
