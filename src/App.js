@@ -15,7 +15,9 @@ class App extends Component {
     this.onChangeError = this.onChangeError.bind(this)
     this.onChangeComment = this.onChangeComment.bind(this)
     this.onClКонтрагент_Key=this.onClКонтрагент_Key.bind(this)
-    this.state = { log: '' ,Контрагент_Key:"4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"}
+    this.onClТочкаОбслуживания_Key=this.onClТочкаОбслуживания_Key.bind(this)
+    this.state = { log: '' ,Контрагент_Key:"",ТочкаОбслуживания_Key:""}
+    
   }
  render() {
     return (
@@ -41,19 +43,28 @@ class App extends Component {
         <textarea value={this.state.log} cols="78" rows="5"></textarea>
         </form>
         <label>Контрагент_Key:</label><input type='text' onChange={this.onClКонтрагент_Key} size='60' value={this.state.Контрагент_Key} id='Контрагент_Key'/>
-         
+        <br />
+        <label>ТочкаОбслу_Key:</label><input type='text' onChange={this.onClТочкаОбслуживания_Key} size='60' value={this.state.ТочкаОбслуживания_Key} id='Контрагент_Key'/>
+        
       </div>
     )
   }
   componentDidMount(){
     let Контрагент_Key=localStorage.getItem('Контрагент_Key')
-    if (Контрагент_Key) {
-      this.setState({ Контрагент_Key: Контрагент_Key})
-    }
+    if (Контрагент_Key) this.setState({ Контрагент_Key: Контрагент_Key})
+    else this.setState({ Контрагент_Key: ''})
+
+    let ТочкаОбслуживания_Key=localStorage.getItem('ТочкаОбслуживания_Key')
+    if (ТочкаОбслуживания_Key) this.setState({ТочкаОбслуживания_Key:ТочкаОбслуживания_Key})
+    else this.setState({ТочкаОбслуживания_Key:''})
   }
   onClКонтрагент_Key(event){
     this.setState({ Контрагент_Key: event.target.value })
     localStorage.setItem('Контрагент_Key',event.target.value)
+  }
+  onClТочкаОбслуживания_Key(event){
+    this.setState({ ТочкаОбслуживания_Key: event.target.value })
+    localStorage.setItem('ТочкаОбслуживания_Key',event.target.value)
   }
   onChangeError(event) {
     this.setState({ error: event.target.value })
@@ -93,7 +104,9 @@ class App extends Component {
     }
     //"4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"
     
-    x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key":this.state.Контрагент_Key, "Комментарий": this.state.comment }))
+    x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key":this.state.Контрагент_Key, "Комментарий": this.state.comment ,
+    "ТочкаОбслуживания_Key": this.state.ТочкаОбслуживания_Key}
+    ))
   }
 }
 
