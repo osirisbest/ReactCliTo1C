@@ -7,6 +7,7 @@ import './App.css'
 //import Client from '../node_modules/another-rest-client';
 const dev=false
 const addr = 'http://192.168.200.139/sc/'
+let points=[]
 
 class App extends Component {
   constructor(props) {
@@ -61,6 +62,24 @@ class App extends Component {
   onClКонтрагент_Key(event){
     this.setState({ Контрагент_Key: event.target.value })
     localStorage.setItem('Контрагент_Key',event.target.value)
+    //get from server data about adress
+    //let values=[]
+    let x = new XMLHttpRequest()
+    x.withCredentials = true;
+
+    x.open("GET", addr + 'odata/standard.odata/Catalog_СЦентр_ТочкиОбслуживания?$format=json', true)
+
+    x.onload = () =>{
+      console.log(x.responseText)
+      JSON.parse(x.responseText).value.forEach(
+        (item)=>{//alert(item)
+        points.push(item)
+      }
+      
+      )
+      console.log(points)
+     }
+    x.send(null)
   }
   onClТочкаОбслуживания_Key(event){
     this.setState({ ТочкаОбслуживания_Key: event.target.value })
