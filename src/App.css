@@ -25,12 +25,13 @@
 
       body {
        background: url('http://pica4u.ru/uploads/posts/2010-01/1263771707_0.jpg');
-        background-size: 100%; /* Современные браузеры */
+        background-size: 100%;
       }
 
       textarea{background:transparent;}
       input{background-color: transparent}
-     
+      select{width: 500px; background-color: Transparent}
+      
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

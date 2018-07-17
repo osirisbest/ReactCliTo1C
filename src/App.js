@@ -7,7 +7,7 @@ import './App.css'
 //import Client from '../node_modules/another-rest-client';
 const dev=false
 const addr = 'http://192.168.200.139/sc/'
-let points=[]
+//let points=[]
 
 class App extends Component {
   constructor(props) {
@@ -17,13 +17,13 @@ class App extends Component {
     this.onChangeComment = this.onChangeComment.bind(this)
     this.onClКонтрагент_Key=this.onClКонтрагент_Key.bind(this)
     this.onClТочкаОбслуживания_Key=this.onClТочкаОбслуживания_Key.bind(this)
-    this.state = { log: '' ,Контрагент_Key:"",ТочкаОбслуживания_Key:"",points:['C++','Java']}
+    this.state = { log: '' ,Контрагент_Key:"",ТочкаОбслуживания_Key:"",points:[]}
     this.onPoints=this.onPoints.bind(this)
   }
  render() {
    const options=this.state.points.map(
      (item,index)=>{
-       return <option key={index} value={index}>{item}</option>
+       return <option key={item[1]} value={item[1]}>{item[0]}</option>
      }
    )
     return (
@@ -54,16 +54,12 @@ class App extends Component {
         <br />
 
 
-        <select value={this.state.points} onChange={this.onPoints}>
+        <select  value={this.state.ТочкаОбслуживания_Key} onChange={this.onPoints}>
           {options}}
         </select>
       </div>
     )
-  }
-  onPoints(event){
-    alert(event.target.value)
-    //this.setState{points:}
-  }
+  } 
   componentDidMount(){
     let Контрагент_Key=localStorage.getItem('Контрагент_Key')
     if (Контрагент_Key) this.setState({ Контрагент_Key: Контрагент_Key})
@@ -73,25 +69,34 @@ class App extends Component {
     if (ТочкаОбслуживания_Key) this.setState({ТочкаОбслуживания_Key:ТочкаОбслуживания_Key})
     else this.setState({ТочкаОбслуживания_Key:''})
   }
+  onPoints(event){
+    this.setState({ТочкаОбслуживания_Key:event.target.value})
+  }
   onClКонтрагент_Key(event){
-    this.setState({ Контрагент_Key: event.target.value })
-    localStorage.setItem('Контрагент_Key',event.target.value)
-    //get from server data about adress
-    //let values=[]
+    let targetValue=event.target.value
+    this.setState({ Контрагент_Key: targetValue })
+    localStorage.setItem('Контрагент_Key',targetValue)
     let x = new XMLHttpRequest()
     x.withCredentials = true;
-
-    x.open("GET", addr + 'odata/standard.odata/Catalog_СЦентр_ТочкиОбслуживания?$format=json', true)
+    //let OwnerKey=targetValue
+    //'4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39'
+    let path=addr + 'odata/standard.odata/Catalog_СЦентр_ТочкиОбслуживания?$format=json&$filter=Owner_Key%20 eq guid\''+targetValue+"'"
+    x.open("GET", path, true)
 
     x.onload = () =>{
-      console.log(x.responseText)
-      JSON.parse(x.responseText).value.forEach(
-        (item)=>{//alert(item)
-        points.push(item)
-      }
+      if (x.status!==200) {
+        console.log(x.responseText)
+        alert('Ошибка. Точек доставки для контрагента не существует?')
+        return}
+      //console.log(x.responseText)
+      let resultJSON=JSON.parse(x.responseText)
       
+      let points=  resultJSON.value.map(
+        (item)=>{//alert(item)
+        return ([item.Description,item.Ref_Key])        
+      }      
       )
-      console.log(points)
+      this.setState({points:points})
      }
     x.send(null)
   }
@@ -135,8 +140,6 @@ class App extends Component {
       console.log('responseText:' + x.responseText)}
       this.setState({ log: x.responseText +"\n"})
     }
-    //"4f2cfe01-7f9d-11e8-8079-d46e0e0c6a39"
-    
     x.send(JSON.stringify({ "ОписаниеНеисправности": this.state.error, "Контрагент_Key":this.state.Контрагент_Key, "Комментарий": this.state.comment ,
     "ТочкаОбслуживания_Key": this.state.ТочкаОбслуживания_Key}
     ))
