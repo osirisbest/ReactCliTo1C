@@ -17,10 +17,15 @@ class App extends Component {
     this.onChangeComment = this.onChangeComment.bind(this)
     this.onClКонтрагент_Key=this.onClКонтрагент_Key.bind(this)
     this.onClТочкаОбслуживания_Key=this.onClТочкаОбслуживания_Key.bind(this)
-    this.state = { log: '' ,Контрагент_Key:"",ТочкаОбслуживания_Key:""}
-    
+    this.state = { log: '' ,Контрагент_Key:"",ТочкаОбслуживания_Key:"",points:['C++','Java']}
+    this.onPoints=this.onPoints.bind(this)
   }
  render() {
+   const options=this.state.points.map(
+     (item,index)=>{
+       return <option key={index} value={index}>{item}</option>
+     }
+   )
     return (
       <div className="App">
         <header className="App-header">
@@ -46,9 +51,18 @@ class App extends Component {
         <label>Контрагент_Key:</label><input type='text' onChange={this.onClКонтрагент_Key} size='60' value={this.state.Контрагент_Key} id='Контрагент_Key'/>
         <br />
         <label>ТочкаОбслу_Key:</label><input type='text' onChange={this.onClТочкаОбслуживания_Key} size='60' value={this.state.ТочкаОбслуживания_Key} id='Контрагент_Key'/>
-        
+        <br />
+
+
+        <select value={this.state.points} onChange={this.onPoints}>
+          {options}}
+        </select>
       </div>
     )
+  }
+  onPoints(event){
+    alert(event.target.value)
+    //this.setState{points:}
   }
   componentDidMount(){
     let Контрагент_Key=localStorage.getItem('Контрагент_Key')
